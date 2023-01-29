@@ -1,16 +1,13 @@
 
 //CLASSES
 
-class API {
-	apiTest(){
-		console.log('API working');
-	}
-	async getFilteredFruits(value){
+class API {	
+	async getFilteredData(value, url){
 		try{
 			const options = {
 				method: 'GET'
 			};
-			let response = await fetch('https://stefan19780915.github.io/data/fruits.json', options);
+			let response = await fetch(url, options);
 			let result = await response.json();
 		    let output = result.fruits.filter((fruit)=>{
 				return fruit.toLowerCase().includes(value.toLowerCase());
@@ -23,11 +20,9 @@ class API {
 }
 
 class UI {
-	static body = document.querySelector('body');
-	uiTest(){
-		console.log('UI working');
-	}
 	
+	static body = document.querySelector('body');
+		
 	displayFruitsComponent(){
 		const searchResults = document.createElement('div');
 		searchResults.classList.add('fruits');
@@ -52,11 +47,11 @@ const ui = new UI();
 ui.displayFruitsComponent();
 const fruitSearch = document.querySelector('.search');
 
-api.apiTest();
-ui.uiTest();
-
 fruitSearch.addEventListener('input',async(e)=>{
-	const filteredFruits = await api.getFilteredFruits(e.target.value);
-	    ui.displayListOfData(filteredFruits, '.fruits');
+	const filteredFruits = await api.getFilteredData(
+		e.target.value,
+		'https://stefan19780915.github.io/data/fruits.json'
+		);
+	e.target.value ? ui.displayListOfData(filteredFruits, '.fruits') : '';
 });
 
